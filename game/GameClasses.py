@@ -58,7 +58,7 @@ class Deck(object):
             self.pieces[i], self.pieces[r] = self.pieces[r], self.pieces[i]
 
     # Função que remove uma peça do deck
-    def drawpiece(self):
+    def draw_piece(self):
         if not self.is_empty():
             return self.pieces.pop()
 
@@ -83,7 +83,7 @@ class Player(object):
 
     # Método em que o jogador adiciona à mão dele uma peça do deck
     def draw(self, deck):
-        self.hand.append(deck.drawPiece())
+        self.hand.append(deck.draw_piece())
         return self
 
     # Mostra a mão do jogador no terminal

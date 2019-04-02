@@ -41,7 +41,7 @@ class Game:
     # todo clicar para adicionar peca
     # todo peca pode se mover
     def main_loop(self):
-        mouse_Clicked = False
+        mouse_clicked = False
         mouse_position = (0, 0)
         tileMoving = -1
         while not self.exit:
@@ -56,13 +56,13 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     for i in range(len(self.players[0].hand)):
                         if self.players[0].hand[i].rect.collidepoint(pygame.mouse.get_pos()):
-                            mouseClicked = True
+                            mouse_clicked = True
                             mouse_position = (pygame.mouse.get_pos()[0] - self.players[0].hand[i].rect.x,
                                               pygame.mouse.get_pos()[1] - self.players[0].hand[i].rect.y)
                             tileMoving = i
                 if event.type == pygame.MOUSEBUTTONUP:
-                    mouseClicked = False
-            if mouseClicked:
+                    mouse_clicked = False
+            if mouse_clicked:
                 self.players[0].hand[tileMoving].rect.x = pygame.mouse.get_pos()[0] - mouse_position[0]
                 self.players[0].hand[tileMoving].rect.y = pygame.mouse.get_pos()[1] - mouse_position[1]
             self.updateFrame()
