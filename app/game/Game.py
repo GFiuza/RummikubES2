@@ -16,24 +16,24 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((Size.WindowWidth, Size.WindowHeight))
         pygame.display.set_caption("Rummikub")
-        self.backGround = Background(os.environ.get("backgound_grid"), [0, 0])
+        self.background = Background(os.environ.get("backgound_grid"), [0, 0])
         self.deck = Deck()
         self.deck.shuffle()
         self.screen.fill(RGB.BOARD_BLACK.value)
         self.players = []
         self.exit = False
 
-    def resetPlayerTilesPosition(self):
+    def reset_player_tiles_position(self):
         for i in range(len(self.players[0].hand)):
             self.players[0].hand[i].rect.x = (i * self.players[0].hand[i].rect.width)
             self.players[0].hand[i].rect.y = Size.WindowHeight - self.players[0].hand[i].rect.height
 
-    def addPlayer(self, name: str, id : int):
-        self.players.append(Player(name, id))
+    def add_player(self, name, id_):
+        self.players.append(Player(name, id_))
 
-    def updateFrame(self):
+    def update_frame(self):
         self.screen.fill((0, 0, 0))
-        self.screen.blit(self.backGround.image, self.backGround.rect)
+        self.screen.blit(self.background.image, self.background.rect)
         self.screen.blit(self.deck.drawButtnImage, self.deck.drawButtnRect)
         for i in self.players[0].hand:
             self.screen.blit(i.image, i.rect)
@@ -43,7 +43,7 @@ class Game:
     def main_loop(self):
         mouse_clicked = False
         mouse_position = (0, 0)
-        tileMoving = -1
+        tile_moving = -1
         while not self.exit:
             self.deck.drawButtnRect.x = Size.WindowWidth * 0.9
             self.deck.drawButtnRect.y = Size.WindowHeight / 2
@@ -53,18 +53,18 @@ class Game:
                     break
                 if event.type == pygame.MOUSEBUTTONDOWN and self.deck.drawButtnRect.collidepoint(pygame.mouse.get_pos()):
                     self.players[0].draw(self.deck)
-                    self.resetPlayerTilesPosition()
+                    self.reset_player_tiles_position()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     for i in range(len(self.players[0].hand)):
                         if self.players[0].hand[i].rect.collidepoint(pygame.mouse.get_pos()):
                             mouse_clicked = True
                             mouse_position = (pygame.mouse.get_pos()[0] - self.players[0].hand[i].rect.x,
                                               pygame.mouse.get_pos()[1] - self.players[0].hand[i].rect.y)
-                            tileMoving = i
+                            tile_moving = i
                 if event.type == pygame.MOUSEBUTTONUP:
                     mouse_clicked = False
             if mouse_clicked:
-                self.players[0].hand[tileMoving].rect.x = pygame.mouse.get_pos()[0] - mouse_position[0]
-                self.players[0].hand[tileMoving].rect.y = pygame.mouse.get_pos()[1] - mouse_position[1]
-            self.updateFrame()
+                self.players[0].hand[tile_moving].rect.x = pygame.mouse.get_pos()[0] - mouse_position[0]
+                self.players[0].hand[tile_moving].rect.y = pygame.mouse.get_pos()[1] - mouse_position[1]
+            self.update_frame()
             pygame.display.update()

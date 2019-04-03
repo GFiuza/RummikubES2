@@ -8,5 +8,5 @@ os.environ['backgound_grid'] = 'resources/static/game_background_grid.png'
 
 from app.game.Game import *
 jogo = Game()
-jogo.addPlayer('Player1', 0)
+jogo.add_player('Player1', 0)
 jogo.main_loop()
