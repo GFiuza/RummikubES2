@@ -1,9 +1,7 @@
 import pygame
-from game.GameEnums import *
+from app.game.GameEnums import *
 import random
 import os.path
-
-from game.GameSprites import Path
 
 
 # Classe que representa a matriz do tabuleiro, na grid
@@ -20,11 +18,11 @@ class Piece(object):
         self.color = color
         self.whereAt = PieceLocale.DECK
         if value != PieceValue.JOKER:
-            self.image = pygame.image.load(os.path.join(os.path.os.path.curdir, '..', 'sprites/pieces',
+            self.image = pygame.image.load(os.path.join('resources/pieces',
                                                         color.name.lower() + "_" + str(value.value) + ".png"))
         else:
             self.image = pygame.image.load(
-                os.path.join(os.path.os.path.curdir, '..', 'sprites/pieces', color.name.lower() + "_1.png"))
+                os.path.join('resources/pieces', color.name.lower() + "_1.png"))
         self.rect = self.image.get_rect()
 
     def show(self):
@@ -37,7 +35,7 @@ class Deck(object):
     def __init__(self):
         self.pieces = []
         self.build()
-        self.drawButtnImage = pygame.image.load(Path.draw_unlock)  # Caminho da imagem
+        self.drawButtnImage = pygame.image.load(os.environ.get("draw_unlock"))  # Caminho da imagem
         self.drawButtnRect = self.drawButtnImage.get_rect()  # 'hitbox' da imagem
 
     # Popula um deck de 104 pecas
