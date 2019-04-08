@@ -14,6 +14,7 @@ class Size(IntEnum):
 
 
 class PieceValue(IntEnum):
+    BLANK = -1
     JOKER = 0
     ONE = 1
     TWO = 2
@@ -31,6 +32,7 @@ class PieceValue(IntEnum):
 
 
 class Color(Enum):
+    BLANK = 'Blank'
     RED = 'Red'
     BLUE = 'Blue'
     BLACK = 'Black'
