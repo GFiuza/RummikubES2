@@ -49,7 +49,7 @@ class GameTable(object):
         # 24 de largura por 8 de altura
         if self.rect.colliderect(piece.rect):
             baseCoord = (self.rect.x, self.rect.y)
-            pieceCoord = (piece.rect.x, piece.rect.y)
+            pieceCoord = piece.rect.center
             height = self.rect.height / 8
             width = self.rect.width / 24
 
