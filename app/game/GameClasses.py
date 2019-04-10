@@ -8,7 +8,7 @@ import os.path
 # Classe que representa uma peça do jogo, quando instanciada ela recebe um valor e uma cor,
 # assim como o caminho do seu sprite.
 class Piece(object):
-    def __init__(self, value: PieceValue, color: Color):
+    def __init__(self, value: PieceValue, color: PieceColor):
         self.value = value
         self.color = color
         self.whereAt = PieceLocale.DECK
@@ -16,7 +16,8 @@ class Piece(object):
         if value != PieceValue.BLANK:
             if value != PieceValue.JOKER:
                 self.image: pygame.image = pygame.image.load(os.path.join('resources/pieces',
-                                                             color.name.lower() + "_" + str(value.value) + ".png"))
+                                                                          color.name.lower() + "_" + str(
+                                                                              value.value) + ".png"))
             else:
                 self.image = pygame.image.load(
                     os.path.join('resources/pieces', color.name.lower() + "_1.png"))
@@ -32,7 +33,8 @@ class Piece(object):
 # Classe que representa a matriz do tabuleiro, na grid
 class GameTable(object):
     def __init__(self, image_file, location):
-        self.tabuleiro: List[List[Piece]] = [[Piece(PieceValue.BLANK, Color.BLANK) for x in range(Table.COLUMNS.value)] for y in range(Table.ROWS.value)]
+        self.tabuleiro: List[List[Piece]] = [[Piece(PieceValue.BLANK, PieceColor.BLANK) for x in range(Table.COLUMNS.value)]
+                                             for y in range(Table.ROWS.value)]
         self.image: pygame.image = pygame.image.load(image_file)
         self.rect: pygame.Rect = self.image.get_rect()
         self.rect.left, self.rect.top = location
@@ -46,28 +48,56 @@ class GameTable(object):
         return string
 
     def collidePiece(self, piece: Piece) -> Tuple[int, int]:
-        # 24 de largura por 8 de altura
+        # Se algum píxel da peça colidiu com algum pixel do tabuleiro:
         if self.rect.colliderect(piece.rect):
+            # 0,0 do grid do tabuleiro
             baseCoord = (self.rect.x, self.rect.y)
-            pieceCoord = piece.rect.center
-            height = self.rect.height / 8
-            width = self.rect.width / 24
 
+            # x,y do centro da peça
+            pieceCoord = piece.rect.center
+
+            # Se o centro da peça estiver fora do grid, retorna pra mão do jogador
+            if pieceCoord[1] > self.rect.y + self.rect.height \
+                    or pieceCoord[0] > self.rect.x + self.rect.width \
+                    or pieceCoord[1] < self.rect.y \
+                    or pieceCoord[0] < self.rect.x:
+                return -1, -1
+
+            # Tamanho de um slot no tabuleiro ; O  tabuleiro é do tamanho 24 x 8
+            height = self.rect.height / Table.ROWS.value
+            width = self.rect.width / Table.COLUMNS.value
+
+            # Índice da matriz onde a peça tentará encaixar
             relativeX: int = (pieceCoord[0] - baseCoord[0]) // width
             relativeY: int = (pieceCoord[1] - baseCoord[1]) // height
 
-            if relativeX < 0:
-                relativeX = 0
-            if relativeY < 0:
-                relativeY = 0
+            # Verifica se o indice e valido e se nao ha nenhuma peca nessa casa do tabuleiro
+            if relativeX < Table.COLUMNS.value and relativeY < Table.ROWS.value:
+                # Se ele tentar mover uma peca para uma casa  ja preenchida
+                if self.tabuleiro[int(relativeY)][int(relativeX)].value.value != -1:
+                    # Se a peca que ele tentar mover for dele, cancela o movimento
+                    if self.tabuleiro[int(relativeY)][int(relativeX)].whereAt == PieceLocale.HAND:
+                        # Se moveu a peca para a mesma casa
+                        if self.tabuleiro[int(relativeY)][int(relativeX)] == piece:
+                            print(self)
+                            return relativeX * width + baseCoord[0], relativeY * height + baseCoord[1]
+                        print(self)
+                        # Se nao, volta pra mao
 
-            self.tabuleiro[int(relativeY)][int(relativeX)] = piece
+                        return -1, -1
+                else:
+                    for i in range(Table.ROWS.value):
+                        for j in range(Table.COLUMNS.value):
+                            # Se a peca esta em alguma outra posicao no tabuleiro, move ela
+                            if self.tabuleiro[i][j] == piece:
+                                self.tabuleiro[i][j] = Piece(PieceValue.BLANK, PieceColor.BLANK)
+                            self.tabuleiro[int(relativeY)][int(relativeX)] = piece
 
             relativeX = relativeX * width + baseCoord[0]
             relativeY = relativeY * height + baseCoord[1]
 
             print(self)
-
+            #print(relativeY, relativeX)
             return relativeX, relativeY
         return -1, -1
 
@@ -83,14 +113,14 @@ class Deck(object):
 
     # Popula um deck de 104 pecas
     def build(self):
-        for color in Color:
+        for color in PieceColor:
             for value in PieceValue:
-                if value == PieceValue.JOKER or color == Color.JOKER or value == PieceValue.BLANK or color == Color.BLANK:
+                if value == PieceValue.JOKER or color == PieceColor.JOKER or value == PieceValue.BLANK or color == PieceColor.BLANK:
                     continue
                 self.pieces.append(Piece(value, color))
                 self.pieces.append(Piece(value, color))
-        self.pieces.append(Piece(PieceValue.JOKER, Color.JOKER))
-        self.pieces.append(Piece(PieceValue.JOKER, Color.JOKER))
+        self.pieces.append(Piece(PieceValue.JOKER, PieceColor.JOKER))
+        self.pieces.append(Piece(PieceValue.JOKER, PieceColor.JOKER))
 
     # Realiza um shuffle
     def shuffle(self):
@@ -115,9 +145,6 @@ class Deck(object):
         return False
 
 
-
-
-
 # Classe que representa um jogador, que possui name, id e uma mão
 class Player(object):
     def __init__(self, name: str, id: int):
@@ -128,6 +155,7 @@ class Player(object):
     # Método em que o jogador adiciona à mão dele uma peça do deck
     def draw(self, deck: Deck):
         self.hand.append(deck.draw_piece())
+        self.hand[-1].whereAt = PieceLocale.HAND
         return self
 
     # Mostra a mão do jogador no terminal

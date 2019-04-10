@@ -31,8 +31,8 @@ class PieceValue(IntEnum):
     THIRTEEN = 13
 
 
-class Color(Enum):
-    BLANK = 'Blank'
+class PieceColor(Enum):
+    BLANK = '#'
     RED = 'Red'
     BLUE = 'Blue'
     BLACK = 'Black'

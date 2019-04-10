@@ -30,7 +30,12 @@ class Game:
             self.players[0].hand[i].rect.x = (i * self.players[0].hand[i].rect.width)
             self.players[0].hand[i].rect.y = Size.WindowHeight - self.players[0].hand[i].rect.height
             self.players[0].hand[i].originalPlace = (self.players[0].hand[i].rect.x, self.players[0].hand[i].rect.y)
+        for i in range(Table.ROWS.value):
+            for j in range(Table.COLUMNS.value):
+                if self.table.tabuleiro[i][j].whereAt == PieceLocale.HAND:
+                    self.table.tabuleiro[i][j] = Piece(PieceValue.BLANK, PieceColor.BLANK)
 
+        print(self.table)
     def add_player(self, name, id_):
         self.players.append(Player(name, id_))
 
@@ -41,6 +46,10 @@ class Game:
         self.screen.blit(self.deck.drawButtnImage, self.deck.drawButtnRect)
         for i in self.players[0].hand:
             self.screen.blit(i.image, i.rect)
+        for row in range(Table.ROWS.value):
+            for col in range(Table.COLUMNS.value):
+                if self.table.tabuleiro[row][col].value.value != -1:
+                    self.screen.blit(self.table.tabuleiro[row][col].image, self.table.tabuleiro[row][col].rect)
 
     # todo clicar para adicionar peca
     # todo peca pode se mover
@@ -55,10 +64,12 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.exit = True
                     break
+                # Se esta clicando no botao de comprar pecas
                 if event.type == pygame.MOUSEBUTTONDOWN and self.deck.drawButtnRect.collidepoint(
                         pygame.mouse.get_pos()):
                     self.players[0].draw(self.deck)
                     self.reset_player_tiles_position()
+                # Se esta clicando em outra area ( depois especificar se esta clicando dentro do grid ou da mao)
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     for i in range(len(self.players[0].hand)):
                         if self.players[0].hand[i].rect.collidepoint(pygame.mouse.get_pos()):
@@ -66,7 +77,9 @@ class Game:
                             mouse_offset = (pygame.mouse.get_pos()[0] - self.players[0].hand[i].rect.x,
                                             pygame.mouse.get_pos()[1] - self.players[0].hand[i].rect.y)
                             tile_moving = i
+                # Quando solta o pressionar do mouse
                 if event.type == pygame.MOUSEBUTTONUP:
+                    # Se verdade, significa que o clique foi em cima de uma peca, entao essa peca pode ter sido movida
                     if is_moving_piece:
                         x, y = self.table.collidePiece(self.players[0].hand[tile_moving])
                         if x == -1:
