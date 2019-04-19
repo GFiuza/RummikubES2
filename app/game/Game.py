@@ -17,7 +17,7 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((Size.WindowWidth, Size.WindowHeight))
         pygame.display.set_caption("Rummikub")
-        self.background = Background(os.path.abspath(os.path.join(os.path.curdir, "resources", "static", "game_background.png")), [0, 0])
+        self.background = Background(os.environ.get("background"), [0, 0])
         self.table = GameTable(os.path.abspath(os.path.join(os.path.curdir, "resources", "static", "table_grid.png")), (40, 40))
         self.deck = Deck()
         self.deck.shuffle()
@@ -41,44 +41,3 @@ class Game:
         self.screen.blit(self.deck.drawButtnImage, self.deck.drawButtnRect)
         for i in self.players[0].hand:
             self.screen.blit(i.image, i.rect)
-
-    # todo clicar para adicionar peca
-    # todo peca pode se mover
-    def main_loop(self):
-        is_moving_piece = False
-        mouse_offset = (0, 0)
-        tile_moving = -1
-        while not self.exit:
-            self.deck.drawButtnRect.x = Size.WindowWidth * 0.9
-            self.deck.drawButtnRect.y = Size.WindowHeight / 2
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.exit = True
-                    break
-                if event.type == pygame.MOUSEBUTTONDOWN and self.deck.drawButtnRect.collidepoint(
-                        pygame.mouse.get_pos()):
-                    self.players[0].draw(self.deck)
-                    self.reset_player_tiles_position()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    for i in range(len(self.players[0].hand)):
-                        if self.players[0].hand[i].rect.collidepoint(pygame.mouse.get_pos()):
-                            is_moving_piece = True
-                            mouse_offset = (pygame.mouse.get_pos()[0] - self.players[0].hand[i].rect.x,
-                                            pygame.mouse.get_pos()[1] - self.players[0].hand[i].rect.y)
-                            tile_moving = i
-                if event.type == pygame.MOUSEBUTTONUP:
-                    if is_moving_piece:
-                        x, y = self.table.collidePiece(self.players[0].hand[tile_moving])
-                        if x == -1:
-                            self.players[0].hand[tile_moving].rect.x, self.players[0].hand[tile_moving].rect.y = self.players[0].hand[tile_moving].originalPlace
-                        else:
-                            self.players[0].hand[tile_moving].rect.x = x
-                            self.players[0].hand[tile_moving].rect.y = y
-                        tile_moving = -1
-                        is_moving_piece = False
-                        mouse_offset = (0, 0)
-            if is_moving_piece:
-                self.players[0].hand[tile_moving].rect.x = pygame.mouse.get_pos()[0] - mouse_offset[0]
-                self.players[0].hand[tile_moving].rect.y = pygame.mouse.get_pos()[1] - mouse_offset[1]
-            self.update_frame()
-            pygame.display.update()
