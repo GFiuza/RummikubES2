@@ -23,13 +23,13 @@ class Game:
         self.deck.shuffle()
         self.screen.fill(RGB.BOARD_BLACK.value)
         self.players: List[Player] = []
-        self.exit = False
 
     def reset_player_tiles_position(self):
         for i in range(len(self.players[0].hand)):
             self.players[0].hand[i].rect.x = (i * self.players[0].hand[i].rect.width)
             self.players[0].hand[i].rect.y = Size.WindowHeight - self.players[0].hand[i].rect.height
             self.players[0].hand[i].originalPlace = (self.players[0].hand[i].rect.x, self.players[0].hand[i].rect.y)
+
 
     def add_player(self, name, id_):
         self.players.append(Player(name, id_))

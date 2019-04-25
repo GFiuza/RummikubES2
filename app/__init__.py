@@ -9,20 +9,21 @@ os.environ['backgound_grid'] = 'resources/static/game_background_grid.png'
 from app.game.Game import *
 game_state = 2
 qntd_jogos = 1
-end_game = False
+close_game = False
 game_list = []
 for i in range(qntd_jogos):
     jogo = Game()
     jogo.add_player('Player1', 0)
+    end_game = False
     is_moving_piece = False
     mouse_offset = (0, 0)
     tile_moving = -1
-    while not end_game:
+    while not end_game and not close_game:
         jogo.deck.drawButtnRect.x = Size.WindowWidth * 0.9
         jogo.deck.drawButtnRect.y = Size.WindowHeight / 2
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                end_game = True
+                close_game = True
                 break
             if event.type == pygame.MOUSEBUTTONDOWN and jogo.deck.drawButtnRect.collidepoint(
                     pygame.mouse.get_pos()):
@@ -52,3 +53,5 @@ for i in range(qntd_jogos):
         jogo.update_frame()
         pygame.display.update()
     game_list.append(jogo)
+    if close_game:
+        exit(0)
