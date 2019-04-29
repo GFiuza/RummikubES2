@@ -35,7 +35,6 @@ class Game:
                 if self.table.tabuleiro[i][j].whereAt == PieceLocale.HAND:
                     self.table.tabuleiro[i][j] = Piece(PieceValue.BLANK, PieceColor.BLANK)
 
-        print(self.table)
     def add_player(self, name, id_):
         self.players.append(Player(name, id_))
 
@@ -51,8 +50,6 @@ class Game:
                 if self.table.tabuleiro[row][col].value.value != -1:
                     self.screen.blit(self.table.tabuleiro[row][col].image, self.table.tabuleiro[row][col].rect)
 
-    # todo clicar para adicionar peca
-    # todo peca pode se mover
     def main_loop(self):
         is_moving_piece = False
         mouse_offset = (0, 0)
