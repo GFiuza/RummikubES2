@@ -1,15 +1,7 @@
-from app.game.GameClasses import *
-from app.game.GameEnums import *
-from typing import List
+from app.game.Player import *
+from app.game.Table import *
+from app.game.Background import *
 import os
-
-
-class Background(pygame.sprite.Sprite):
-    def __init__(self, image_file, location):
-        pygame.sprite.Sprite.__init__(self)  # call Sprite initializer
-        self.image = pygame.image.load(image_file)
-        self.rect = self.image.get_rect()
-        self.rect.left, self.rect.top = location
 
 
 class Game:
