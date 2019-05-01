@@ -52,6 +52,6 @@ for i in range(qntd_jogos):
             jogo.players[0].hand[tile_moving].rect.y = pygame.mouse.get_pos()[1] - mouse_offset[1]
         jogo.update_frame()
         pygame.display.update()
-    game_list.append(jogo)
+    game_list.append(jogo)      # TODO salvar tudo em algum arquivo quando já tiver pontuação etc
     if close_game:
         exit(0)
