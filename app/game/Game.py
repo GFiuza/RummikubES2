@@ -1,15 +1,7 @@
-from app.game.GameClasses import *
-from app.game.GameEnums import *
-from typing import List
+from app.game.Player import *
+from app.game.Table import *
+from app.game.Background import *
 import os
-
-
-class Background(pygame.sprite.Sprite):
-    def __init__(self, image_file, location):
-        pygame.sprite.Sprite.__init__(self)  # call Sprite initializer
-        self.image = pygame.image.load(image_file)
-        self.rect = self.image.get_rect()
-        self.rect.left, self.rect.top = location
 
 
 class Game:
@@ -17,13 +9,12 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((Size.WindowWidth, Size.WindowHeight))
         pygame.display.set_caption("Rummikub")
-        self.background = Background(os.path.abspath(os.path.join(os.path.curdir, "resources", "static", "game_background.png")), [0, 0])
+        self.background = Background(os.environ.get("background"), [0, 0])
         self.table = GameTable(os.path.abspath(os.path.join(os.path.curdir, "resources", "static", "table_grid.png")), (40, 40))
         self.deck = Deck()
         self.deck.shuffle()
         self.screen.fill(RGB.BOARD_BLACK.value)
         self.players: List[Player] = []
-        self.exit = False
 
     def reset_player_tiles_position(self):
         for i in range(len(self.players[0].hand)):
@@ -35,7 +26,7 @@ class Game:
                 if self.table.tabuleiro[i][j].whereAt == PieceLocale.HAND:
                     self.table.tabuleiro[i][j] = Piece(PieceValue.BLANK, PieceColor.BLANK)
 
-        print(self.table)
+
     def add_player(self, name, id_):
         self.players.append(Player(name, id_))
 
@@ -51,6 +42,7 @@ class Game:
                 if self.table.tabuleiro[row][col].value.value != -1:
                     self.screen.blit(self.table.tabuleiro[row][col].image, self.table.tabuleiro[row][col].rect)
 
+<<<<<<< HEAD
     # todo clicar para adicionar peca
     # todo peca pode se mover
     def main_loop(self):
@@ -107,3 +99,5 @@ class Game:
                 self.players[0].hand[tile_moving].rect.y = pygame.mouse.get_pos()[1] - mouse_offset[1]
             self.update_frame()
             pygame.display.update()
+=======
+>>>>>>> c56408b902f9a12c30eb83614ff0080c02fa37e8
