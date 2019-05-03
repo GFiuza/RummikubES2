@@ -1,5 +1,4 @@
 import os
-
 os.environ['background'] = 'resources/static/game_background.png'
 os.environ['draw_unlock'] = 'resources/buttons/comprar_mais.png'
 os.environ['draw_lock'] = 'resources/buttons/comprar_mais_lock.png'
@@ -36,14 +35,28 @@ for i in range(qntd_jogos):
                         mouse_offset = (pygame.mouse.get_pos()[0] - jogo.players[0].hand[i].rect.x,
                                         pygame.mouse.get_pos()[1] - jogo.players[0].hand[i].rect.y)
                         tile_moving = i
+                        #Se a peca selecionada estiver no tabuleiro, guardar local onde esta caso o jogador tente coloca la num local invalido
+                        if jogo.players[0].hand[tile_moving].whereAt == PieceLocale.TABLE:
+                            last_x = jogo.players[0].hand[tile_moving].rect.x
+                            last_y = jogo.players[0].hand[tile_moving].rect.y
+
+
+            # Quando solta o pressionar do mouse
             if event.type == pygame.MOUSEBUTTONUP:
+                # Se verdade, significa que o clique foi em cima de uma peca, entao essa peca pode ter sido movida
                 if is_moving_piece:
                     x, y = jogo.table.collidePiece(jogo.players[0].hand[tile_moving])
                     if x == -1:
-                        jogo.players[0].hand[tile_moving].rect.x, jogo.players[0].hand[tile_moving].rect.y = jogo.players[0].hand[tile_moving].originalPlace
+                        # Retorna la a posicao inicial somente se ela nao tiver passado pelo tabuleiro ainda
+                        if jogo.players[0].hand[tile_moving].whereAt == PieceLocale.HAND:
+                            jogo.players[0].hand[tile_moving].rect.x, jogo.players[0].hand[tile_moving].rect.y = jogo.players[0].hand[tile_moving].originalPlace
+                        else:
+                            jogo.players[0].hand[tile_moving].rect.x = last_x
+                            jogo.players[0].hand[tile_moving].rect.y = last_y
                     else:
                         jogo.players[0].hand[tile_moving].rect.x = x
                         jogo.players[0].hand[tile_moving].rect.y = y
+                        jogo.players[0].hand[tile_moving].whereAt = PieceLocale.TABLE
                     tile_moving = -1
                     is_moving_piece = False
                     mouse_offset = (0, 0)
