@@ -41,4 +41,3 @@ class Game:
             for col in range(Table.COLUMNS.value):
                 if self.table.tabuleiro[row][col].value.value != -1:
                     self.screen.blit(self.table.tabuleiro[row][col].image, self.table.tabuleiro[row][col].rect)
-
