@@ -37,7 +37,7 @@ class PieceColor(Enum):
     BLUE = 'Blue'
     BLACK = 'Black'
     YELLOW = 'Yellow'
-    JOKER = 'Joker'
+    JOKER = 'joker'
 
 
 class PieceLocale(Enum):

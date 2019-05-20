@@ -1,5 +1,5 @@
 from app.game.Deck import *
-
+from operator import itemgetter
 
 
 # Classe que representa um jogador, que possui name, id e uma mão
@@ -21,5 +21,31 @@ class Player(object):
         for piece in self.hand:
             piece.show()
 
-    # todo sorting de mão
-    # def sortHand(self):
+    def sort_hand_sequence(self):
+        i = 1
+        while i < len(self.hand):
+            piece = self.hand[i]
+            j = i-1
+            while j >= 0 and piece.value < self.hand[j].value:
+                self.hand[j+1] = self.hand[j]
+                j -= 1
+            while j >= 0 and piece.color.value < self.hand[j].color.value and piece.value == self.hand[j].value:
+                self.hand[j+1] = self.hand[j]
+                j -= 1
+            self.hand[j+1] = piece
+            i += 1
+
+    def sort_hand_rep(self):
+        i = 1
+        while i < len(self.hand):
+            piece = self.hand[i]
+            j = i-1
+            while j >= 0 and piece.color.value < self.hand[j].color.value:
+                self.hand[j+1] = self.hand[j]
+                j -= 1
+            while j >= 0 and piece.value < self.hand[j].value and piece.color.value == self.hand[j].color.value:
+                self.hand[j+1] = self.hand[j]
+                j -= 1
+            self.hand[j+1] = piece
+            i += 1
+
