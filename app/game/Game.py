@@ -18,14 +18,16 @@ class Game:
 
     def reset_player_tiles_position(self):
         for i in range(len(self.players[0].hand)):
-            self.players[0].hand[i].rect.x = (i * self.players[0].hand[i].rect.width)
-            self.players[0].hand[i].rect.y = Size.WindowHeight - self.players[0].hand[i].rect.height
+            offset = (i + 1) * self.players[0].hand[i].rect.width // self.background.rect.width
+            background_width = self.background.rect.width
+            piece_height = self.players[0].hand[i].rect.height
+            self.players[0].hand[i].rect.x = i * self.players[0].hand[i].rect.width - offset * (background_width - 4)
+            self.players[0].hand[i].rect.y = Size.WindowHeight - self.players[0].hand[i].rect.height - offset * (piece_height + 4)
             self.players[0].hand[i].originalPlace = (self.players[0].hand[i].rect.x, self.players[0].hand[i].rect.y)
         for i in range(Table.ROWS.value):
             for j in range(Table.COLUMNS.value):
                 if self.table.tabuleiro[i][j].whereAt == PieceLocale.HAND:
                     self.table.tabuleiro[i][j] = Piece(PieceValue.BLANK, PieceColor.BLANK)
-
 
     def add_player(self, name, id_):
         self.players.append(Player(name, id_))
