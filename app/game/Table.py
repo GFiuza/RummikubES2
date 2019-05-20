@@ -105,8 +105,6 @@ class GameTable(object):
                             return False
             return True
 
-
-
     def collidePiece(self, piece: Piece) -> Tuple[int, int]:
         # Se algum píxel da peça colidiu com algum pixel do tabuleiro:
         if self.rect.colliderect(piece.rect):
@@ -128,8 +126,8 @@ class GameTable(object):
             width = self.rect.width / Table.COLUMNS.value
 
             # Índice da matriz onde a peça tentará encaixar
-            relativeX: int = (pieceCoord[0] - baseCoord[0]) // width
-            relativeY: int = (pieceCoord[1] - baseCoord[1]) // height
+            relativeX = int(pieceCoord[0] - baseCoord[0]) // width
+            relativeY = int(pieceCoord[1] - baseCoord[1]) // height
 
             # Verifica se o indice e valido e se nao ha nenhuma peca nessa casa do tabuleiro
             if relativeX < Table.COLUMNS.value and relativeY < Table.ROWS.value:
@@ -142,7 +140,7 @@ class GameTable(object):
                             return relativeX * width + baseCoord[0], relativeY * height + baseCoord[1]
                         # Se nao, volta pra mao
 
-                        return -1, -1
+                    return -1, -1
                 else:
                     for i in range(Table.ROWS.value):
                         for j in range(Table.COLUMNS.value):
