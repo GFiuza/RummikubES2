@@ -45,19 +45,22 @@ for i in range(qntd_jogos):
                             break
                         jogo.update_on_hover(pygame.mouse.get_pos())
                         player.sort_hand_rep()
-                        if event.type == pygame.MOUSEBUTTONDOWN and (jogo.buttons.drawButtnRect.collidepoint(
-                                pygame.mouse.get_pos()) or jogo.buttons.validadeTurnRect.collidepoint(
-                                pygame.mouse.get_pos())):
-                            if jogo.table.validity() and jogo.buttons.validadeTurnRect.collidepoint(pygame.mouse.get_pos()):
-                                jogo.table.commit_table(player)
-                            elif not has_moved and jogo.buttons.drawButtnRect.collidepoint(
+                        if event.type == pygame.MOUSEBUTTONDOWN and jogo.buttons.drawButtnRect.collidepoint(
                                 pygame.mouse.get_pos()):
+                            if not player_pieces_placed or not jogo.table.validity():
                                 player.draw(jogo.deck)
-                            jogo.reset_player_tiles_position(player)
-                            jogo.table.tabuleiro = tabuleiro_atual
-                            end_turn = True
-                            break
-
+                                jogo.reset_player_tiles_position(player)
+                                jogo.table.tabuleiro = tabuleiro_atual
+                                end_turn = True
+                                break
+                        if event.type == pygame.MOUSEBUTTONDOWN and jogo.buttons.validadeTurnRect.collidepoint(
+                                pygame.mouse.get_pos()):
+                            if jogo.table.validity() and player_pieces_placed:
+                                jogo.table.commit_table(player)
+                                jogo.reset_player_tiles_position(player)
+                                jogo.table.tabuleiro = tabuleiro_atual
+                                end_turn = True
+                                break
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             for i in range(len(player.hand)):
                                 if player.hand[i].rect.collidepoint(pygame.mouse.get_pos()):
@@ -85,9 +88,6 @@ for i in range(qntd_jogos):
                                 else:
                                     player.hand[tile_moving].rect.x = x
                                     player.hand[tile_moving].rect.y = y
-                                    if player.hand[tile_moving].whereAt == PieceLocale.HAND:
-                                        has_moved = 1
-                                    player.hand[tile_moving].whereAt = PieceLocale.TABLE
                                     player_pieces_placed.append(player.hand[tile_moving])
                                 tile_moving = -1
                                 is_moving_piece = False
@@ -106,6 +106,7 @@ for i in range(qntd_jogos):
                     end_turn = True
                 jogo.update_frame(player)
                 pygame.display.update()
+                jogo.buttons.button_reset_pos()
     game_list.append(jogo)  # TODO salvar tudo em algum arquivo quando já tiver pontuação etc
     if close_game:
         exit(0)

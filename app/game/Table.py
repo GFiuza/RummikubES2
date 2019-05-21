@@ -150,6 +150,7 @@ class GameTable(object):
                                 self.tabuleiro[i][j] = Piece(PieceValue.BLANK, PieceColor.BLANK, -1)
                                 self.tabuleiro[i][j].whereAt = PieceLocale.TABLE
                             self.tabuleiro[int(relativeY)][int(relativeX)] = piece
+                            self.tabuleiro[int(relativeY)][int(relativeX)].whereAt = PieceLocale.TABLE
             relativeX = relativeX * width + baseCoord[0]
             relativeY = relativeY * height + baseCoord[1]
 
