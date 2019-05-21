@@ -8,19 +8,19 @@ class Deck(object):
     def __init__(self):
         self.pieces: List[Piece] = []
         self.build()
-        self.drawButtnImage = pygame.image.load(os.environ.get("draw_unlock"))  # Caminho da imagem
-        self.drawButtnRect: pygame.Rect = self.drawButtnImage.get_rect()  # 'hitbox' da imagem
 
     # Popula um deck de 104 pecas
     def build(self):
+        id = 1
         for color in PieceColor:
             for value in PieceValue:
                 if value == PieceValue.JOKER or color == PieceColor.JOKER or value == PieceValue.BLANK or color == PieceColor.BLANK:
                     continue
-                self.pieces.append(Piece(value, color))
-                self.pieces.append(Piece(value, color))
-        self.pieces.append(Piece(PieceValue.JOKER, PieceColor.JOKER))
-        self.pieces.append(Piece(PieceValue.JOKER, PieceColor.JOKER))
+                self.pieces.append(Piece(value, color, id))
+                self.pieces.append(Piece(value, color, id + 1))
+                id += 2
+        self.pieces.append(Piece(PieceValue.JOKER, PieceColor.JOKER, id))
+        self.pieces.append(Piece(PieceValue.JOKER, PieceColor.JOKER, id))
 
     # Realiza um shuffle
     def shuffle(self):

@@ -5,7 +5,7 @@ from typing import List, Tuple
 
 class GameTable(object):
     def __init__(self, image_file, location):
-        self.tabuleiro: List[List[Piece]] = [[Piece(PieceValue.BLANK, PieceColor.BLANK) for x in range(Table.COLUMNS.value)]
+        self.tabuleiro: List[List[Piece]] = [[Piece(PieceValue.BLANK, PieceColor.BLANK, -1) for x in range(Table.COLUMNS.value)]
                                              for y in range(Table.ROWS.value)]
         self.image: pygame.image = pygame.image.load(image_file)
         self.rect: pygame.Rect = self.image.get_rect()
@@ -24,7 +24,6 @@ class GameTable(object):
         # variavel que vai conter o resultado final
         result: List[List[Piece]] = []
 
-
         for i in range(len(self.tabuleiro)):
             # variavel temporaria para obter um grupo de peças que estão lado a lado
             tempGroups: List[Piece] = []
@@ -39,10 +38,12 @@ class GameTable(object):
                     tempGroups = []
         return result
 
+
     def validity(self) -> bool:
         # obtem todas as peças que estão lado a lado em arrays separados
         groups = self.get_groups()
-
+        if len(groups) == 0:
+            return True
         # para cada grupo de peças
         for i in groups:
             # se o tamanho do grupo for menor que 3, então o tabuleiro não é valido
@@ -146,11 +147,17 @@ class GameTable(object):
                         for j in range(Table.COLUMNS.value):
                             # Se a peca esta em alguma outra posicao no tabuleiro, move ela
                             if self.tabuleiro[i][j] == piece:
-                                self.tabuleiro[i][j] = Piece(PieceValue.BLANK, PieceColor.BLANK)
+                                self.tabuleiro[i][j] = Piece(PieceValue.BLANK, PieceColor.BLANK, -1)
+                                self.tabuleiro[i][j].whereAt = PieceLocale.TABLE
                             self.tabuleiro[int(relativeY)][int(relativeX)] = piece
-
             relativeX = relativeX * width + baseCoord[0]
             relativeY = relativeY * height + baseCoord[1]
 
             return relativeX, relativeY
         return -1, -1
+
+    def commit_table(self, player):
+        player_hand = player.hand.copy()
+        for card in player_hand:
+            if card.whereAt == PieceLocale.TABLE:
+                player.hand.remove(card)
