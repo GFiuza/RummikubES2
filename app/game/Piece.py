@@ -25,7 +25,7 @@ class Piece(object):
             self.rect: pygame.Rect = self.image.get_rect()
 
     def __str__(self):
-        return str(self.value.value) + "-" + str(self.color.value) + "/" + str(self.id)
+        return str(self.value.value) + "-" + str(self.color.value) + "/" + str(self.id) + "/" + str(self.whereAt)
 
     def show(self):
         print("{} - {} / {}".format(self.color, self.value, self.id))

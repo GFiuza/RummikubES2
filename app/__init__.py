@@ -1,5 +1,5 @@
 import os
-from time import sleep
+from copy import deepcopy
 
 os.environ['background'] = 'resources/static/game_background.png'
 os.environ['draw_unlock'] = 'resources/buttons/comprar_mais.png'
@@ -30,12 +30,13 @@ for i in range(qntd_jogos):
         for player in jogo.players:
             jogo.turn_display = jogo.turn_display_font.render("Vez de: " + player.name,
                                                               False, (0, 0, 0))
+            print([str(hand) for hand in player.hand])
             jogo.update_frame(player)
             pygame.display.update()
             jogo.buttons.button_reset_pos()
             has_moved = 0
             end_turn = False
-            tabuleiro_atual = jogo.table.tabuleiro
+            tabuleiro_atual = deepcopy(jogo.table.tabuleiro)
             player_pieces_placed = []
             while not end_game and not close_game and not end_turn:
                 if not player.IA:
@@ -49,6 +50,7 @@ for i in range(qntd_jogos):
                                 pygame.mouse.get_pos()):
                             if not player_pieces_placed or not jogo.table.validity():
                                 player.draw(jogo.deck)
+                                jogo.table.rollback_table(player)
                                 jogo.reset_player_tiles_position(player)
                                 jogo.table.tabuleiro = tabuleiro_atual
                                 end_turn = True
@@ -58,7 +60,6 @@ for i in range(qntd_jogos):
                             if jogo.table.validity() and player_pieces_placed:
                                 jogo.table.commit_table(player)
                                 jogo.reset_player_tiles_position(player)
-                                jogo.table.tabuleiro = tabuleiro_atual
                                 end_turn = True
                                 break
                         if event.type == pygame.MOUSEBUTTONDOWN:

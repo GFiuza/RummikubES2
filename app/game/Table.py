@@ -157,8 +157,13 @@ class GameTable(object):
             return relativeX, relativeY
         return -1, -1
 
-    def commit_table(self, player):
+    def clear_hand(self, player):
         player_hand = player.hand.copy()
         for card in player_hand:
             if card.whereAt == PieceLocale.TABLE:
                 player.hand.remove(card)
+
+    def rollback_table(self, player):
+        for card in player.hand:
+            if card.whereAt == PieceLocale.TABLE:
+                card.whereAt = PieceLocale.HAND

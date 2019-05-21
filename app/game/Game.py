@@ -32,7 +32,7 @@ class Game:
         for i in range(Table.ROWS.value):
             for j in range(Table.COLUMNS.value):
                 if self.table.tabuleiro[i][j].whereAt == PieceLocale.HAND:
-                    self.table.tabuleiro[i][j] = Piece(PieceValue.BLANK, PieceColor.BLANK)
+                    self.table.tabuleiro[i][j] = Piece(PieceValue.BLANK, PieceColor.BLANK, -1)
                     self.table.tabuleiro[i][j].whereAt = PieceLocale.TABLE
 
     def add_player(self, name, id_, IA=False):
