@@ -17,7 +17,7 @@ for i in range(qntd_jogos):
         break
     jogo = Game()
     jogo.add_player('G', 0)
-    jogo.add_player('SG', 1)
+    # jogo.add_player('SG', 1)
     end_game = False
     mouse_offset = (0, 0)
     tile_moving = -1
@@ -74,39 +74,75 @@ for i in range(qntd_jogos):
                                 end_turn = True
                                 break
                         if event.type == pygame.MOUSEBUTTONDOWN:
-                            for i in range(len(player.hand)):
-                                if player.hand[i].rect.collidepoint(pygame.mouse.get_pos()):
-                                    is_moving_piece = True
-                                    mouse_offset = (pygame.mouse.get_pos()[0] - player.hand[i].rect.x,
-                                                    pygame.mouse.get_pos()[1] - player.hand[i].rect.y)
-                                    tile_moving = i
-                                    #Se a peca selecionada estiver no tabuleiro, guardar local onde esta caso o jogador tente coloca la num local invalido
-                                    if player.hand[tile_moving].whereAt == PieceLocale.TABLE:
-                                        last_x = player.hand[tile_moving].rect.x
-                                        last_y = player.hand[tile_moving].rect.y
+                            if not is_moving_piece:
+                                for i in range(len(player.hand)):
+                                    if player.hand[i].rect.collidepoint(pygame.mouse.get_pos()):
+                                        is_moving_piece = True
+                                        mouse_offset = (pygame.mouse.get_pos()[0] - player.hand[i].rect.x,
+                                                        pygame.mouse.get_pos()[1] - player.hand[i].rect.y)
+                                        tile_moving = i
+                                        #Se a peca selecionada estiver no tabuleiro, guardar local onde esta caso o jogador tente coloca la num local invalido
+                                        if player.hand[tile_moving].whereAt == PieceLocale.TABLE:
+                                            last_x = player.hand[tile_moving].rect.x
+                                            last_y = player.hand[tile_moving].rect.y
+                            if not is_moving_piece:
+                                found = False
+                                for line_tab in range(len(jogo.table.tabuleiro)):
+                                    if found:
+                                        break
+                                    for col_tab in range(len(jogo.table.tabuleiro[line_tab])):
+                                        tab = jogo.table.tabuleiro[line_tab][col_tab]
+                                        if tab.value != PieceValue.BLANK and tab.rect.collidepoint(pygame.mouse.get_pos()):
+                                            is_moving_piece = True
+                                            mouse_offset = (pygame.mouse.get_pos()[0] - tab.rect.x,
+                                                            pygame.mouse.get_pos()[1] - tab.rect.y)
+                                            tile_moving = [line_tab, col_tab]
+                                            last_x = tab.rect.x
+                                            last_y = tab.rect.y
+                                            found = True
+                                            break
 
                         # Quando solta o pressionar do mouse
                         if event.type == pygame.MOUSEBUTTONUP:
-                            # Se verdade, significa que o clique foi em cima de uma peca, entao essa peca pode ter sido movida
-                            if is_moving_piece:
-                                x, y = jogo.table.collidePiece(player.hand[tile_moving])
-                                if x == -1:
-                                    # Retorna la a posicao inicial somente se ela nao tiver passado pelo tabuleiro ainda
-                                    if player.hand[tile_moving].whereAt == PieceLocale.HAND:
-                                        player.hand[tile_moving].rect.x, player.hand[tile_moving].rect.y = player.hand[tile_moving].originalPlace
+                            if type(tile_moving) is int or type(tile_moving) is str:
+                                # Se verdade, significa que o clique foi em cima de uma peca, entao essa peca pode ter sido movida
+                                if is_moving_piece:
+                                    x, y = jogo.table.collidePiece(player.hand[tile_moving])
+                                    if x == -1:
+                                        # Retorna la a posicao inicial somente se ela nao tiver passado pelo tabuleiro ainda
+                                        if player.hand[tile_moving].whereAt == PieceLocale.HAND:
+                                            player.hand[tile_moving].rect.x, player.hand[tile_moving].rect.y = player.hand[tile_moving].originalPlace
+                                        else:
+                                            player.hand[tile_moving].rect.x = last_x
+                                            player.hand[tile_moving].rect.y = last_y
                                     else:
-                                        player.hand[tile_moving].rect.x = last_x
-                                        player.hand[tile_moving].rect.y = last_y
-                                else:
-                                    player.hand[tile_moving].rect.x = x
-                                    player.hand[tile_moving].rect.y = y
-                                    player_pieces_placed.append(player.hand[tile_moving])
-                                tile_moving = -1
-                                is_moving_piece = False
-                                mouse_offset = (0, 0)
-                    if is_moving_piece:
+                                        player.hand[tile_moving].rect.x = x
+                                        player.hand[tile_moving].rect.y = y
+                                        player_pieces_placed.append(player.hand[tile_moving])
+                                    tile_moving = -1
+                                    is_moving_piece = False
+                                    mouse_offset = (0, 0)
+                            else:
+                                if is_moving_piece:
+                                    piece = jogo.table.tabuleiro[tile_moving[0]][tile_moving[1]]
+                                    x, y = jogo.table.collidePiece(piece)
+                                    if x == -1:
+                                        # Retorna la a posicao inicial somente se ela nao tiver passado pelo tabuleiro ainda
+                                        piece.rect.x = last_x
+                                        piece.rect.y = last_y
+                                    else:
+                                        piece.rect.x = x
+                                        piece.rect.y = y
+                                        # player_pieces_placed.append(player.hand[tile_moving])
+                                    tile_moving = -1
+                                    is_moving_piece = False
+                                    mouse_offset = (0, 0)
+                    if is_moving_piece and (type(tile_moving) is int or type(tile_moving) is str):
                         player.hand[tile_moving].rect.x = pygame.mouse.get_pos()[0] - mouse_offset[0]
                         player.hand[tile_moving].rect.y = pygame.mouse.get_pos()[1] - mouse_offset[1]
+                    elif is_moving_piece:
+                        jogo.table.tabuleiro[tile_moving[0]][tile_moving[1]].rect.x = pygame.mouse.get_pos()[0] - mouse_offset[0]
+                        jogo.table.tabuleiro[tile_moving[0]][tile_moving[1]].rect.y = pygame.mouse.get_pos()[1] - mouse_offset[1]
                 # Ignora o evento de clique enquanto nao estiver na vez do jogador, para evitar crash
                 else:
                     for event in pygame.event.get():
