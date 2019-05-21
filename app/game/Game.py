@@ -13,7 +13,7 @@ class Game:
         self.background = Background(os.environ.get("background"), [0, 0])
         self.table = GameTable(os.path.abspath(os.path.join(os.path.curdir, "resources", "static", "table_grid.png")), (40, 40))
         self.deck = Deck()
-        #self.deck.shuffle()
+        self.deck.shuffle()
         self.screen.fill(RGB.BOARD_BLACK.value)
         self.players: List[Player] = []
         self.turn_display_font = pygame.font.SysFont('Comic Sans MS',30)
