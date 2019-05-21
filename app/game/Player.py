@@ -3,10 +3,11 @@ from operator import itemgetter
 
 # Classe que representa um jogador, que possui name, id e uma mão
 class Player(object):
-    def __init__(self, name: str, id: int):
-        self.name: str = name
+    def __init__(self, name, id, IA):
+        self.name = name
         self.hand: List[Piece] = []
-        self.id: int = id
+        self.id = id
+        self.IA = IA
 
     # Método em que o jogador adiciona à mão dele uma peça do deck
     def draw(self, deck: Deck):

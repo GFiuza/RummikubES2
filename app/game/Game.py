@@ -35,8 +35,8 @@ class Game:
                     self.table.tabuleiro[i][j] = Piece(PieceValue.BLANK, PieceColor.BLANK)
                     self.table.tabuleiro[i][j].whereAt = PieceLocale.TABLE
 
-    def add_player(self, name, id_):
-        self.players.append(Player(name, id_))
+    def add_player(self, name, id_, IA=False):
+        self.players.append(Player(name, id_, IA))
 
     def update_frame(self, player):
         self.screen.fill((0, 0, 0))
@@ -47,7 +47,7 @@ class Game:
 
         self.screen.blit(self.turn_display, (Size.WindowWidth * 0.85, Size.WindowHeight*0.05))
         self.screen.blit(self.point_display, (Size.WindowWidth * 0.85, Size.WindowHeight*0.10))
-        for i in player.hand:
+        for i in self.players[0].hand:
             self.screen.blit(i.image, i.rect)
         for row in range(Table.ROWS.value):
             for col in range(Table.COLUMNS.value):
