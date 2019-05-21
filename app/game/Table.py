@@ -104,7 +104,7 @@ class GameTable(object):
                                 refValue += 1
                         else:
                             return False
-            return True
+        return True
 
     def collidePiece(self, piece: Piece) -> Tuple[int, int]:
         # Se algum píxel da peça colidiu com algum pixel do tabuleiro:

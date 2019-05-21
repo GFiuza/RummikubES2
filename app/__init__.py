@@ -1,5 +1,4 @@
 import os
-from copy import deepcopy
 
 os.environ['background'] = 'resources/static/game_background.png'
 os.environ['draw_unlock'] = 'resources/buttons/comprar_mais.png'
@@ -14,9 +13,11 @@ qntd_jogos = 1
 close_game = False
 game_list = []
 for i in range(qntd_jogos):
+    if close_game:
+        break
     jogo = Game()
     jogo.add_player('G', 0)
-    jogo.add_player('F', 1, True)
+    # jogo.add_player('F', 1, True)
     end_game = False
     mouse_offset = (0, 0)
     tile_moving = -1
@@ -25,12 +26,12 @@ for i in range(qntd_jogos):
             player.draw(jogo.deck)
             jogo.reset_player_tiles_position(player)
             player.sort_hand_rep()
-    while not end_game:
+    while not end_game and not close_game:
         is_moving_piece = False
         for player in jogo.players:
-            jogo.turn_display = jogo.turn_display_font.render("Vez de: " + player.name,
-                                                              False, (0, 0, 0))
-            print([str(hand) for hand in player.hand])
+            if close_game or end_game:
+                break
+            jogo.turn_display = jogo.turn_display_font.render("Vez de: " + player.name, False, (0, 0, 0))
             jogo.update_frame(player)
             pygame.display.update()
             jogo.buttons.button_reset_pos()
