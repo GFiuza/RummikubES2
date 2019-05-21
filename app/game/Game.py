@@ -16,14 +16,14 @@ class Game:
         self.screen.fill(RGB.BOARD_BLACK.value)
         self.players: List[Player] = []
 
-    def reset_player_tiles_position(self):
-        for i in range(len(self.players[0].hand)):
-            offset = (i + 1) * self.players[0].hand[i].rect.width // self.background.rect.width
+    def reset_player_tiles_position(self, player):
+        for i in range(len(player.hand)):
+            offset = (i + 1) * player.hand[i].rect.width // self.background.rect.width
             background_width = self.background.rect.width
-            piece_height = self.players[0].hand[i].rect.height
-            self.players[0].hand[i].rect.x = i * self.players[0].hand[i].rect.width - offset * (background_width - 4)
-            self.players[0].hand[i].rect.y = Size.WindowHeight - self.players[0].hand[i].rect.height - offset * (piece_height + 4)
-            self.players[0].hand[i].originalPlace = (self.players[0].hand[i].rect.x, self.players[0].hand[i].rect.y)
+            piece_height = player.hand[i].rect.height
+            player.hand[i].rect.x = i * player.hand[i].rect.width - offset * (background_width - 4)
+            player.hand[i].rect.y = Size.WindowHeight - player.hand[i].rect.height - offset * (piece_height + 4)
+            player.hand[i].originalPlace = (player.hand[i].rect.x, player.hand[i].rect.y)
         for i in range(Table.ROWS.value):
             for j in range(Table.COLUMNS.value):
                 if self.table.tabuleiro[i][j].whereAt == PieceLocale.HAND:
@@ -32,12 +32,12 @@ class Game:
     def add_player(self, name, id_):
         self.players.append(Player(name, id_))
 
-    def update_frame(self):
+    def update_frame(self, player):
         self.screen.fill((0, 0, 0))
         self.screen.blit(self.background.image, self.background.rect)
         self.screen.blit(self.table.image, self.table.rect)
         self.screen.blit(self.deck.drawButtnImage, self.deck.drawButtnRect)
-        for i in self.players[0].hand:
+        for i in player.hand:
             self.screen.blit(i.image, i.rect)
         for row in range(Table.ROWS.value):
             for col in range(Table.COLUMNS.value):
