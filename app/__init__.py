@@ -54,7 +54,7 @@ for i in range(qntd_jogos):
                             # ou o jogador não tenha feito o initial_meld
                             if not player_pieces_placed or not jogo.table.validity() or not player.doneMeld:
                                 player.draw(jogo.deck)
-                                jogo.table.rollback_table(player)
+                                jogo.table.rollback(player, tabuleiro_atual)
                                 jogo.reset_player_tiles_position(player)
                                 jogo.table.tabuleiro = tabuleiro_atual
                                 end_turn = True

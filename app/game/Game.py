@@ -34,6 +34,8 @@ class Game:
                 if self.table.tabuleiro[i][j].whereAt == PieceLocale.HAND:
                     self.table.tabuleiro[i][j] = Piece(PieceValue.BLANK, PieceColor.BLANK, -1)
                     self.table.tabuleiro[i][j].whereAt = PieceLocale.TABLE
+                if self.table.tabuleiro[i][j].value != PieceValue.BLANK:
+                    self.table.tabuleiro[i][j].originalPlace = (self.table.tabuleiro[i][j].rect.x, self.table.tabuleiro[i][j].rect.y)
 
     def add_player(self, name, id_, IA=False):
         self.players.append(Player(name, id_, IA))

@@ -163,7 +163,11 @@ class GameTable(object):
             if card.whereAt == PieceLocale.TABLE:
                 player.hand.remove(card)
 
-    def rollback_table(self, player):
+    def rollback(self, player, table):
         for card in player.hand:
             if card.whereAt == PieceLocale.TABLE:
                 card.whereAt = PieceLocale.HAND
+        for line in table:
+            for col in line:
+                if col.value != PieceValue.BLANK:
+                    col.rect.x, col.rect.y = col.originalPlace
