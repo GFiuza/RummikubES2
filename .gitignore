@@ -1,4 +1,4 @@
 venv/
 .idea/
-app/__pycache__
-app/game/__pycache__
+**/__pycache__
+**/**/__pycache__
