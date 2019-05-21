@@ -52,23 +52,45 @@ class Player(object):
 
     # Calcula o valor do initial meld
     def initial_meld(self, pieces_placed: List[Piece], tabuleiro: List[List[Piece]]):
-        for i in pieces_placed:
+        sorted_pieces = sorted(pieces_placed, key=lambda x: x.value)
+        for i in sorted_pieces:
             print(i)
-        soma = 0
-        if len(pieces_placed) < 3:
-            return 0
+        print("----")
         for group in tabuleiro:
             for p in range(1, len(group) + 1):
-                for k in pieces_placed:
-                    if k.id == group[p - 1].id:
-                        if k.value != PieceValue.JOKER:
-                            soma += k.value.value
-                        else:
-                            # Se o coringa faz parte de trinca
-                            if group[0].value.value == group[1].value.value and \
-                                    group[0].value.value == group[2].value.value:
-                                soma += group[p - 1].value.value
-                            # Se o coringa faz parte de sequencia
-                            else:
-                                soma += group[p - 1].value.value + 1
+                print(group[p-1])
+
+        if len(pieces_placed) < 3:
+            return 0
+        soma = 0
+        for k in range(len(sorted_pieces)):
+            for group in tabuleiro:
+                joker_count = sum(p.value == PieceValue.JOKER for p in group)
+                print("joker count = " + str(joker_count))
+                # Se nao houver coringa no initial meld
+                if joker_count == 0:
+                    for p in range(1, len(group) + 1):
+                        if sorted_pieces[k].id == group[p - 1].id:
+                            soma += sorted_pieces[k].value.value
+                    return soma
+                # Se houver coringa no initial meld
+                else:
+                    for diff in group:
+                        if diff.value != PieceValue.JOKER:
+                            # Trinca/Quadra
+                            if sum(p.value == diff.value for p in group) > 1:
+                                print("passou aqui 0")
+                                return diff.value.value * len(group)
+                    # Sequencia
+                    for p in range(len(group)):
+                        # Calculos de PA
+                        if group[0].value != PieceValue.JOKER:
+                            print("passou aqui 1")
+                            return (group[0].value.value + (group[0].value.value + len(group) - 1)) * len(group)/2
+                        if group[1].value != PieceValue.JOKER:
+                            return group[1].value.value - 1 + (group[1].value.value + (group[1].value.value + len(group) - 2)) * (len(group)-1)/2
+                        return group[2].value.value - 1 + group[2].value.value - 2 + (
+                                    group[1].value.value + (group[1].value.value + len(group) - 3)) * (
+                                           len(group) - 2) / 2
+
         return soma
