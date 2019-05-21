@@ -8,6 +8,7 @@ class Player(object):
         self.hand: List[Piece] = []
         self.id = id
         self.IA = IA
+        self.doneMeld = False
 
     # Método em que o jogador adiciona à mão dele uma peça do deck
     def draw(self, deck: Deck):
@@ -50,3 +51,53 @@ class Player(object):
             self.hand[j+1] = piece
             i += 1
 
+    def initial_meld(self, pieces_placed: List[Piece], tabuleiro: List[List[Piece]]):
+        sorted_pieces = sorted(pieces_placed, key=lambda x: x.value)
+        for i in sorted_pieces:
+            print(i)
+        print("----")
+        for group in tabuleiro:
+            for p in range(1, len(group) + 1):
+                print(group[p-1])
+
+        if len(pieces_placed) < 3:
+            return 0
+        soma = 0
+        # Verificando
+        for k in range(len(sorted_pieces)):
+            for group in tabuleiro:
+                # Verificando se esse grupo é formado somente por peças do jogador
+                sum_pieces_in_line = sum(1 if piece.id == group_p.id else 0 for group_p in group for piece in sorted_pieces)
+                if sum_pieces_in_line < len(group):
+                    return 0
+                elif sum_pieces_in_line == 0:
+                    break
+
+                joker_count = sum(p.value == PieceValue.JOKER for p in group)
+                print("joker count = " + str(joker_count))
+
+                # Se nao houver coringa no initial meld
+                if joker_count == 0:
+                    for p in range(len(group)):
+                        if sorted_pieces[k].id == group[p].id:
+                            soma += sorted_pieces[k].value.value
+                # Se houver coringa no initial meld
+                else:
+                    for diff in group:
+                        if diff.value != PieceValue.JOKER:
+                            # Trinca/Quadra
+                            if sum(p.value == diff.value for p in group) > 1:
+                                print("passou aqui 0")
+                                return diff.value.value * len(group)
+                    # Sequencia
+                    for p in range(len(group)):
+                        # Calculos de PA
+                        if group[0].value != PieceValue.JOKER:
+                            print("passou aqui 1")
+                            return (group[0].value.value + (group[0].value.value + len(group) - 1)) * len(group)/2
+                        if group[1].value != PieceValue.JOKER:
+                            return group[1].value.value - 1 + (group[1].value.value + (group[1].value.value + len(group) - 2)) * (len(group)-1)/2
+                        return group[2].value.value - 1 + group[2].value.value - 2 + (
+                                    group[1].value.value + (group[1].value.value + len(group) - 3)) * (
+                                           len(group) - 2) / 2
+        return soma

@@ -17,12 +17,13 @@ for i in range(qntd_jogos):
         break
     jogo = Game()
     jogo.add_player('G', 0)
-    # jogo.add_player('F', 1, True)
+    jogo.add_player('SG', 1)
     end_game = False
     mouse_offset = (0, 0)
     tile_moving = -1
     for k in range(14):
         for player in jogo.players:
+            player.doneMeld = False
             player.draw(jogo.deck)
             jogo.reset_player_tiles_position(player)
             player.sort_hand_rep()
@@ -49,7 +50,9 @@ for i in range(qntd_jogos):
                         player.sort_hand_rep()
                         if event.type == pygame.MOUSEBUTTONDOWN and jogo.buttons.drawButtnRect.collidepoint(
                                 pygame.mouse.get_pos()):
-                            if not player_pieces_placed or not jogo.table.validity():
+                            # Permite comprar caso o jogador não tenha posto peça, ou o tabuleiro não esteja válido
+                            # ou o jogador não tenha feito o initial_meld
+                            if not player_pieces_placed or not jogo.table.validity() or not player.doneMeld:
                                 player.draw(jogo.deck)
                                 jogo.table.rollback_table(player)
                                 jogo.reset_player_tiles_position(player)
@@ -58,7 +61,14 @@ for i in range(qntd_jogos):
                                 break
                         if event.type == pygame.MOUSEBUTTONDOWN and jogo.buttons.validadeTurnRect.collidepoint(
                                 pygame.mouse.get_pos()):
-                            if jogo.table.validity() and player_pieces_placed:
+                            # Verificando se já foi realizado o initial_meld. Se não, roda a função para
+                            # verificar a pontuação
+                            if not player.doneMeld:
+                                player.doneMeld = True if player.initial_meld(player_pieces_placed, jogo.table.get_groups()) >= 30 else False
+
+                            # Somente permite passar de turno (sem comprar) caso o tabuleiro esteja válido
+                            # tenha sido feito o initial_meld e se ele tiver jogado peça
+                            if jogo.table.validity() and player_pieces_placed and player.doneMeld:
                                 jogo.table.clear_hand(player)
                                 jogo.reset_player_tiles_position(player)
                                 end_turn = True

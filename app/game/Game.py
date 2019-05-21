@@ -47,8 +47,9 @@ class Game:
 
         self.screen.blit(self.turn_display, (Size.WindowWidth * 0.85, Size.WindowHeight*0.05))
         self.screen.blit(self.point_display, (Size.WindowWidth * 0.85, Size.WindowHeight*0.10))
-        for i in self.players[0].hand:
-            self.screen.blit(i.image, i.rect)
+        if not player.IA:
+            for i in player.hand:
+                self.screen.blit(i.image, i.rect)
         for row in range(Table.ROWS.value):
             for col in range(Table.COLUMNS.value):
                 if self.table.tabuleiro[row][col].value.value != -1:
