@@ -1,7 +1,6 @@
 from app.game.Deck import *
 from operator import itemgetter
 
-
 # Classe que representa um jogador, que possui name, id e uma mão
 class Player(object):
     def __init__(self, name: str, id: int):
@@ -11,8 +10,9 @@ class Player(object):
 
     # Método em que o jogador adiciona à mão dele uma peça do deck
     def draw(self, deck: Deck):
-        self.hand.append(deck.draw_piece())
-        self.hand[-1].whereAt = PieceLocale.HAND
+        peca = deck.draw_piece()
+        peca.whereAt = PieceLocale.HAND
+        self.hand.append(peca)
         return self
 
     # Mostra a mão do jogador no terminal
@@ -49,3 +49,26 @@ class Player(object):
             self.hand[j+1] = piece
             i += 1
 
+
+    # Calcula o valor do initial meld
+    def initial_meld(self, pieces_placed: List[Piece], tabuleiro: List[List[Piece]]):
+        for i in pieces_placed:
+            print(i)
+        soma = 0
+        if len(pieces_placed) < 3:
+            return 0
+        for group in tabuleiro:
+            for p in range(1, len(group) + 1):
+                for k in pieces_placed:
+                    if k.id == group[p - 1].id:
+                        if k.value != PieceValue.JOKER:
+                            soma += k.value.value
+                        else:
+                            # Se o coringa faz parte de trinca
+                            if group[0].value.value == group[1].value.value and \
+                                    group[0].value.value == group[2].value.value:
+                                soma += group[p - 1].value.value
+                            # Se o coringa faz parte de sequencia
+                            else:
+                                soma += group[p - 1].value.value + 1
+        return soma
