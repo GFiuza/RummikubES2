@@ -36,7 +36,7 @@ for i in range(qntd_jogos):
             jogo.buttons.button_reset_pos()
             has_moved = 0
             end_turn = False
-            tabuleiro_atual = deepcopy(jogo.table.tabuleiro)
+            tabuleiro_atual = [[single for single in table] for table in jogo.table.tabuleiro]
             player_pieces_placed = []
             while not end_game and not close_game and not end_turn:
                 if not player.IA:
@@ -58,7 +58,7 @@ for i in range(qntd_jogos):
                         if event.type == pygame.MOUSEBUTTONDOWN and jogo.buttons.validadeTurnRect.collidepoint(
                                 pygame.mouse.get_pos()):
                             if jogo.table.validity() and player_pieces_placed:
-                                jogo.table.commit_table(player)
+                                jogo.table.clear_hand(player)
                                 jogo.reset_player_tiles_position(player)
                                 end_turn = True
                                 break
