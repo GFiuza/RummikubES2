@@ -49,26 +49,3 @@ class Player(object):
             self.hand[j+1] = piece
             i += 1
 
-
-    # Calcula o valor do initial meld
-    def initial_meld(self, pieces_placed: List[Piece], tabuleiro: List[List[Piece]]):
-        for i in pieces_placed:
-            print(i)
-        soma = 0
-        if len(pieces_placed) < 3:
-            return 0
-        for group in tabuleiro:
-            for p in range(1, len(group) + 1):
-                for k in pieces_placed:
-                    if k.id == group[p - 1].id:
-                        if k.value != PieceValue.JOKER:
-                            soma += k.value.value
-                        else:
-                            # Se o coringa faz parte de trinca
-                            if group[0].value.value == group[1].value.value and \
-                                    group[0].value.value == group[2].value.value:
-                                soma += group[p - 1].value.value
-                            # Se o coringa faz parte de sequencia
-                            else:
-                                soma += group[p - 1].value.value + 1
-        return soma

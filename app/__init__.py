@@ -17,7 +17,6 @@ for i in range(qntd_jogos):
     jogo = Game()
     jogo.add_player('Player1', 0)
     turn_number = 0
-    meld_done = False
     jogo.turn_display = jogo.turn_display_font.render("Vez de: " + str(turn_number % 4),
                                                       False, (0, 0, 0))
     end_game = False
@@ -33,12 +32,6 @@ for i in range(qntd_jogos):
     while not end_game and not close_game:
         player_pieces_placed = []
         while turn_number >= 0:
-            print("MAO DO JOGADOR NO TABLE:")
-            for i in jogo.table.tabuleiro:
-                for j in i:
-                    if j.whereAt == PieceLocale.HAND:
-                        print(j)
-            print("-----")
             tabuleiro_atual = jogo.table.tabuleiro
 
             # Se estiver na vez do jogador 0
@@ -68,18 +61,8 @@ for i in range(qntd_jogos):
                             pygame.mouse.get_pos()):
                         print("evento: end turn")
                         print("validity: " + str(jogo.table.validity()))
-                        if not meld_done:
-                            # print("num de pecas colocadas: " + str(len(player_pieces_placed)))
-                            initial_meld = jogo.players[0].initial_meld(player_pieces_placed, jogo.table.get_groups())
-                            print("initial meld = " + str(initial_meld))
 
-                            if initial_meld < 30:
-                                jogo.point_display = jogo.turn_display_font.render("!!Pontos: " + str(initial_meld),
-                                                                                   False, (0, 0, 0))
-                            else:
-                                meld_done = True
-
-                        if jogo.table.validity() and meld_done:
+                        if jogo.table.validity():
                             jogo.table.commit_table()
                             # print(jogo.table)
                             turn_number += 1
