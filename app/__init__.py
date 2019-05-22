@@ -17,8 +17,7 @@ for i in range(qntd_jogos):
         break
     jogo = Game()
     jogo.add_player('G', 0)
-    jogo.add_player('SG', 1)
-    jogo.add_player('GG', 1)
+    jogo.add_player('S', 1)
     end_game = False
     mouse_offset = (0, 0)
     tile_moving = -1

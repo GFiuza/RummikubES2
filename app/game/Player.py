@@ -64,14 +64,23 @@ class Player(object):
             return 0
         soma = 0
         # Verificando
+        for tab in tabuleiro:
+            soma_len = 0
+            for group_p in tab:
+                for piece in sorted_pieces:
+                    if piece.id == group_p.id:
+                        soma_len += 1
+            if 0 < soma_len < len(tab):
+                return 0
+
         for k in range(len(sorted_pieces)):
             for group in tabuleiro:
                 # Verificando se esse grupo é formado somente por peças do jogador
-                sum_pieces_in_line = sum(1 if piece.id == group_p.id else 0 for group_p in group for piece in sorted_pieces)
-                if 0 < sum_pieces_in_line < len(group):
-                    return 0
-                elif sum_pieces_in_line == 0:
-                    break
+                # sum_pieces_in_line = sum(1 if piece.id == group_p.id else 0 for group_p in group for piece in sorted_pieces)
+                # if 0 < sum_pieces_in_line < len(group):
+                #     return 0
+                # elif sum_pieces_in_line == 0:
+                #     break
 
                 joker_count = sum(p.value == PieceValue.JOKER for p in group)
                 print("joker count = " + str(joker_count))
