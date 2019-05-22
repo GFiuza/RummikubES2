@@ -20,7 +20,7 @@ class Deck(object):
                 self.pieces.append(Piece(value, color, id + 1))
                 id += 2
         self.pieces.append(Piece(PieceValue.JOKER, PieceColor.JOKER, id))
-        self.pieces.append(Piece(PieceValue.JOKER, PieceColor.JOKER, id))
+        self.pieces.append(Piece(PieceValue.JOKER, PieceColor.JOKER, id + 1))
 
     # Realiza um shuffle
     def shuffle(self):

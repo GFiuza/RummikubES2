@@ -68,7 +68,7 @@ class Player(object):
             for group in tabuleiro:
                 # Verificando se esse grupo é formado somente por peças do jogador
                 sum_pieces_in_line = sum(1 if piece.id == group_p.id else 0 for group_p in group for piece in sorted_pieces)
-                if sum_pieces_in_line < len(group):
+                if 0 < sum_pieces_in_line < len(group):
                     return 0
                 elif sum_pieces_in_line == 0:
                     break
