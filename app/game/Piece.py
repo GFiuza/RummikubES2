@@ -16,12 +16,12 @@ class Piece(object):
         self.onHover = False
         if value != PieceValue.BLANK:
             if value != PieceValue.JOKER:
-                self.image: pygame.image = pygame.image.load(os.path.join('resources/pieces',
+                self.image: pygame.image = pygame.image.load(os.path.join(os.environ.get("pieces"),
                                                                           color.name.lower() + "_" + str(
                                                                               value.value) + ".png"))
             else:
                 self.image = pygame.image.load(
-                    os.path.join('resources/pieces', color.name.lower() + "_1.png"))
+                    os.path.join(os.environ.get("pieces"), color.name.lower() + "_1.png"))
             self.rect: pygame.Rect = self.image.get_rect()
 
     def __str__(self):
