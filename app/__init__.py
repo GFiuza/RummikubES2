@@ -44,6 +44,9 @@ for i in range(qntd_jogos):
             tabuleiro_atual = [[single for single in table] for table in jogo.table.tabuleiro]
             player_pieces_placed = []
             while not end_game and not close_game and not end_turn:
+                if jogo.do_end_game >= len(jogo.players):
+                    end_game = True
+                    break
                 if not player.IA:
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
@@ -61,6 +64,9 @@ for i in range(qntd_jogos):
                                 jogo.reset_player_tiles_position(player)
                                 jogo.table.tabuleiro = tabuleiro_atual
                                 end_turn = True
+                                # Variável para guardar quantos jogadores já skipparam turno
+                                if jogo.deck.is_empty():
+                                    jogo.do_end_game += 1
                                 break
                         if event.type == pygame.MOUSEBUTTONDOWN and jogo.buttons.validadeTurnRect.collidepoint(
                                 pygame.mouse.get_pos()):
@@ -75,6 +81,7 @@ for i in range(qntd_jogos):
                                 jogo.table.clear_hand(player)
                                 jogo.reset_player_tiles_position(player)
                                 end_turn = True
+                                jogo.do_end_game = 0
                                 break
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             if not is_moving_piece:
@@ -159,11 +166,11 @@ for i in range(qntd_jogos):
                 pygame.display.update()
                 jogo.buttons.button_reset_pos()
     game_list.append(jogo)  # TODO salvar tudo em algum arquivo quando já tiver pontuação etc
-    winner = jogo.calc_pont_players()
     if not close_game:
+        winner = jogo.calc_pont_players()
         last_game = jogo
     else:
         exit(0)
-    players_by_score = sorted(jogo.players, key=lambda x: x.score)
-    print("Vencedor da rodada: " + winner.name + " com " + winner.score)
-    print("Jogador com maior pontuação: " + players_by_score[0].name + " com " + players_by_score[0].score)
+    print("Vencedor da rodada: " + winner.name + " com " + str(winner.current_score))
+    print("Jogador com maior pontuação: " + jogo.players[0].name + " com " + str(jogo.players[0].score))
+exit(0)

@@ -9,13 +9,15 @@ class Player(object):
         self.id = id
         self.IA = IA
         self.score = 0
+        self.current_score = 0
         self.doneMeld = False
 
     # Método em que o jogador adiciona à mão dele uma peça do deck
     def draw(self, deck: Deck):
-        peca = deck.draw_piece()
-        peca.whereAt = PieceLocale.HAND
-        self.hand.append(peca)
+        if not deck.is_empty():
+            peca = deck.draw_piece()
+            peca.whereAt = PieceLocale.HAND
+            self.hand.append(peca)
         return self
 
     # Mostra a mão do jogador no terminal

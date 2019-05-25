@@ -20,6 +20,7 @@ class Game:
         self.turn_display = self.turn_display_font.render(' Teste', False, (0, 0, 0))
         self.point_display = self.turn_display_font.render(' Pontos:', False, (0, 0, 0))
         self.buttons = Button()
+        self.do_end_game = 0
 
     def reset_player_tiles_position(self, player):
         for i in range(len(player.hand)):
@@ -88,19 +89,20 @@ class Game:
 
     def calc_pont_players(self):
         total_sum_game = 0
-        winner = None
-        # Itera a mão dos jogadores para calcular pontos
+        # Itera a mão dos jogadores para calcular pontos na variavel current_score
         for player in self.players:
-            # Se não tiver cartas na mão, é o vencedor
-            if not player.hand:
-                winner = player
             for piece in player.hand:
                 piece_val = piece.value.value if piece.value != PieceValue.JOKER else 30
-                player.score -= piece_val
-                total_sum_game += piece_val
-        if winner:
-            winner.score += total_sum_game
-        return winner
+                player.current_score += piece_val
+        # Após isso, ordena pela menor pontuação, que é o vencedor da rodada
+        self.players = sorted(self.players, key=lambda x: x.current_score, reverse=True)
+        # Percorre todos os jogadores, exceto o primeiro calculando a pontuação dele e guardando na variável o total
+        for i in range(1, len(self.players)):
+            self.players[i].score -= (self.players[i].current_score - self.players[0].current_score)
+            total_sum_game += self.players[i].current_score
+        # Dá ao vencedor a pontuação correta
+        self.players[0].score += total_sum_game
+        return self.players[0]
 
     def restart_players(self):
         for player in self.players:
