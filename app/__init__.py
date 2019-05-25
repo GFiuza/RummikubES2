@@ -12,12 +12,15 @@ game_state = 2
 qntd_jogos = 1
 close_game = False
 game_list = []
+last_game = False
 for i in range(qntd_jogos):
-    if close_game:
-        break
     jogo = Game()
-    jogo.add_player('G', 0)
-    jogo.add_player('S', 1)
+    if last_game:
+        jogo.players = last_game.players
+        jogo.restart_players()
+    else:
+        jogo.add_player('G', 0)
+        jogo.add_player('S', 1)
     end_game = False
     mouse_offset = (0, 0)
     tile_moving = -1
@@ -156,5 +159,11 @@ for i in range(qntd_jogos):
                 pygame.display.update()
                 jogo.buttons.button_reset_pos()
     game_list.append(jogo)  # TODO salvar tudo em algum arquivo quando já tiver pontuação etc
-    if close_game:
+    winner = jogo.calc_pont_players()
+    if not close_game:
+        last_game = jogo
+    else:
         exit(0)
+    players_by_score = sorted(jogo.players, key=lambda x: x.score)
+    print("Vencedor da rodada: " + winner.name + " com " + winner.score)
+    print("Jogador com maior pontuação: " + players_by_score[0].name + " com " + players_by_score[0].score)

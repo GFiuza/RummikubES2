@@ -85,3 +85,25 @@ class Game:
                 self.buttons.button_reset_pos()
                 self.buttons.validadeTurnOnHover = False
                 return
+
+    def calc_pont_players(self):
+        total_sum_game = 0
+        winner = None
+        # Itera a mão dos jogadores para calcular pontos
+        for player in self.players:
+            # Se não tiver cartas na mão, é o vencedor
+            if not player.hand:
+                winner = player
+            for piece in player.hand:
+                piece_val = piece.value.value if piece.value != PieceValue.JOKER else 30
+                player.score -= piece_val
+                total_sum_game += piece_val
+        if winner:
+            winner.score += total_sum_game
+        return winner
+
+    def restart_players(self):
+        for player in self.players:
+            player.hand = []
+            player.doneMeld = False
+        return True

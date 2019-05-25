@@ -8,6 +8,7 @@ class Player(object):
         self.hand: List[Piece] = []
         self.id = id
         self.IA = IA
+        self.score = 0
         self.doneMeld = False
 
     # Método em que o jogador adiciona à mão dele uma peça do deck
@@ -110,3 +111,4 @@ class Player(object):
                                     group[1].value.value + (group[1].value.value + len(group) - 3)) * (
                                            len(group) - 2) / 2
         return soma
+
