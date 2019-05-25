@@ -11,7 +11,7 @@ class Game:
         self.screen = pygame.display.set_mode((Size.WindowWidth, Size.WindowHeight))
         pygame.display.set_caption("Rummikub")
         self.background = Background(os.environ.get("background"), [0, 0])
-        self.table = GameTable(os.path.abspath(os.path.join(os.path.curdir, "resources", "static", "table_grid.png")), (40, 40))
+        self.table = GameTable(os.environ.get("table_grid"), (40, 40))
         self.deck = Deck()
         self.deck.shuffle()
         self.screen.fill(RGB.BOARD_BLACK.value)
