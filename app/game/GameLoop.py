@@ -1,9 +1,9 @@
 from app.game.Game import *
 import os
+from app.game.Game import *
+
 
 def main_loop():
-    from app.game.Game import *
-
     game_state = 2
     qntd_jogos = 1
     close_game = False
@@ -159,7 +159,6 @@ def main_loop():
         game_list.append(jogo)  # TODO salvar tudo em algum arquivo quando já tiver pontuação etc
         if close_game:
             exit(0)
-
 
 if __name__ == "__main__":
     main_loop()
