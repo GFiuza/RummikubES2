@@ -12,8 +12,10 @@ def main_loop():
         if close_game:
             break
         jogo = Game()
-        jogo.add_player('G', 0)
-        jogo.add_player('S', 1)
+        jogo.add_player('Murta', 0)
+        jogo.add_player('Aline', 1)
+        jogo.add_player('Esteban', 2)
+        jogo.add_player('Ralfh', 3)
         end_game = False
         mouse_offset = (0, 0)
         tile_moving = -1
@@ -22,13 +24,15 @@ def main_loop():
                 player.doneMeld = False
                 player.draw(jogo.deck)
                 jogo.reset_player_tiles_position(player)
-                player.sort_hand_rep()
+                # player.sort_hand_rep()
+
         while not end_game and not close_game:
             is_moving_piece = False
             for player in jogo.players:
                 if close_game or end_game:
                     break
-                jogo.turn_display = jogo.turn_display_font.render("Vez de: " + player.name, False, (0, 0, 0))
+                jogo.turn_display = jogo.turn_display_font.render("Vez de: " + player.name, False, (220, 255, 40))
+                jogo.player_boards[player.id].display_name(str(len(player.hand)))
                 jogo.update_frame(player)
                 pygame.display.update()
                 jogo.buttons.button_reset_pos()
@@ -43,8 +47,8 @@ def main_loop():
                                 close_game = True
                                 break
                             jogo.update_on_hover(pygame.mouse.get_pos())
-                            player.sort_hand_rep()
-                            if event.type == pygame.MOUSEBUTTONDOWN and jogo.buttons.drawButtnRect.collidepoint(
+                        # Clicar em comprar peca
+                            if event.type == pygame.MOUSEBUTTONDOWN and jogo.buttons.buttnDrawRect.collidepoint(
                                     pygame.mouse.get_pos()):
                                 # Permite comprar caso o jogador não tenha posto peça, ou o tabuleiro não esteja válido
                                 # ou o jogador não tenha feito o initial_meld
@@ -55,7 +59,8 @@ def main_loop():
                                     jogo.table.tabuleiro = tabuleiro_atual
                                     end_turn = True
                                     break
-                            if event.type == pygame.MOUSEBUTTONDOWN and jogo.buttons.validadeTurnRect.collidepoint(
+                        # Clicar em finalizar jogada
+                            if event.type == pygame.MOUSEBUTTONDOWN and jogo.buttons.buttnMeldRect.collidepoint(
                                     pygame.mouse.get_pos()):
                                 # Verificando se já foi realizado o initial_meld. Se não, roda a função para
                                 # verificar a pontuação
