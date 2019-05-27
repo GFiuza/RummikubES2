@@ -75,6 +75,17 @@ def main_loop():
                                     jogo.reset_player_tiles_position(player)
                                     end_turn = True
                                     break
+                        # Clicar em sort de sequencia:
+                            if event.type == pygame.MOUSEBUTTONDOWN and jogo.buttons.buttnSortSeqRect.collidepoint(
+                                    pygame.mouse.get_pos()):
+                                player.sort_hand_seq()
+                                jogo.reset_player_tiles_position(player)
+
+                        # Clicar em sort de sequencia:
+                            if event.type == pygame.MOUSEBUTTONDOWN and jogo.buttons.buttnSortRepRect.collidepoint(
+                                    pygame.mouse.get_pos()):
+                                player.sort_hand_rep()
+                                jogo.reset_player_tiles_position(player)
                             if event.type == pygame.MOUSEBUTTONDOWN:
                                 if not is_moving_piece:
                                     for i in range(len(player.hand)):

@@ -23,7 +23,7 @@ class Player(object):
         for piece in self.hand:
             piece.show()
 
-    def sort_hand_sequence(self):
+    def sort_hand_rep(self):
         i = 1
         while i < len(self.hand):
             piece = self.hand[i]
@@ -37,7 +37,7 @@ class Player(object):
             self.hand[j+1] = piece
             i += 1
 
-    def sort_hand_rep(self):
+    def sort_hand_seq(self):
         i = 1
         while i < len(self.hand):
             piece = self.hand[i]
