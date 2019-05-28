@@ -174,7 +174,10 @@ def main_loop():
             exit(0)
         print("Vencedor da rodada: " + winner.name + " com " + str(winner.current_score))
         print("Jogador com maior pontuação: " + jogo.players[0].name + " com " + str(jogo.players[0].score))
-    exit(0)
+    winners = jogo.calc_winner()
+    print("O(s) vencedor(es) é/são:")
+    for winner in winners:
+        print("\n" + winner.name + " com: " + winner.score + " pontos.")
 
 
 if __name__ == "__main__":

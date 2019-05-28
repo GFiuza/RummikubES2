@@ -109,3 +109,10 @@ class Game:
             player.hand = []
             player.doneMeld = False
         return True
+
+    def calc_winner(self):
+        winner = []
+        for player in self.players:
+            if not winner or winner[0].score < player.score or winner[0].score == player.score:
+                winner.append(player)
+        return winner
