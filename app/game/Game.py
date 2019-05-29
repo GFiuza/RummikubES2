@@ -95,7 +95,7 @@ class Game:
                 piece_val = piece.value.value if piece.value != PieceValue.JOKER else 30
                 player.current_score += piece_val
         # Após isso, ordena pela menor pontuação, que é o vencedor da rodada
-        self.players = sorted(self.players, key=lambda x: x.current_score, reverse=True)
+        self.players = sorted(self.players, key=lambda x: x.current_score, reverse=False)
         # Percorre todos os jogadores, exceto o primeiro calculando a pontuação dele e guardando na variável o total
         for i in range(1, len(self.players)):
             self.players[i].score -= (self.players[i].current_score - self.players[0].current_score)
@@ -108,6 +108,7 @@ class Game:
         for player in self.players:
             player.hand = []
             player.doneMeld = False
+            player.current_score = 0
         return True
 
     def calc_winner(self):

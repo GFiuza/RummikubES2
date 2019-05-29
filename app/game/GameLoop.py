@@ -22,7 +22,6 @@ def main_loop():
         tile_moving = -1
         for k in range(14):
             for player in jogo.players:
-                player.doneMeld = False
                 player.draw(jogo.deck)
                 jogo.reset_player_tiles_position(player)
                 player.sort_hand_rep()
