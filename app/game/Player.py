@@ -110,3 +110,17 @@ class Player(object):
                                     group[1].value.value + (group[1].value.value + len(group) - 3)) * (
                                            len(group) - 2) / 2
         return soma
+
+    #heuristica básica para uma eventual IA, considera numero de peças em mão e o somatório de seus valores(quanto mais peças e maior o valor, pior)
+    def hand_value(self):
+        pieces = len(self.hand)
+        if pieces == 0:
+            return 100 #valor a ser substituido pela soma da pontuação dos outros jogadores
+        value = 0
+        for piece in self.hand:
+            if piece.value == PieceValue.JOKER:
+                value -= 30
+            else:
+                value -= piece.value
+
+        return (pieces * -20) + value
